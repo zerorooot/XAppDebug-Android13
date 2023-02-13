@@ -31,7 +31,7 @@ public class HookMain implements IXposedHookLoadPackage {
     // https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/com/android/internal/os/Zygote.java
     private static final int DEBUG_ENABLE_JDWP = 1;
 
-    private static final String PACKAGE_MANAGER_SERVICE_CLASS = "com.android.server.pm.PackageManagerService";
+    private static final String PACKAGE_MANAGER_SERVICE_CLASS = "com.android.server.pm.ComputerEngine";
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -42,7 +42,7 @@ public class HookMain implements IXposedHookLoadPackage {
                 PACKAGE_MANAGER_SERVICE_CLASS,
                 lpparam.classLoader,
                 "getPackageInfo",
-                String.class, int.class, int.class, /* packageName, flags, userId */
+                String.class, long.class, int.class, /* packageName, flags, userId */
                 new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -65,7 +65,7 @@ public class HookMain implements IXposedHookLoadPackage {
                 PACKAGE_MANAGER_SERVICE_CLASS,
                 lpparam.classLoader,
                 "getApplicationInfo",
-                String.class, int.class, int.class, /* packageName, flags, userId */
+                String.class, long.class, int.class, /* packageName, flags, userId */
                 new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -87,8 +87,8 @@ public class HookMain implements IXposedHookLoadPackage {
         findAndHookMethod(
                 PACKAGE_MANAGER_SERVICE_CLASS,
                 lpparam.classLoader,
-                "getInstalledApplicationsListInternal",
-                int.class, int.class, int.class, /* flags, userId, callingUid */
+                "getInstalledApplications",
+                long.class, int.class, int.class, /* flags, userId, callingUid */
                 new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
